@@ -1,1 +1,5 @@
 driver/t230_encode
+packaging/pkg/
+packaging/src/
+*.pkg.tar.zst
+*.tar.gz

@@ -26,6 +26,23 @@ settings, with one difference: Normal and Fine quality render at 600 dpi.
 
 ## Install
 
+### Package (recommended)
+
+The AUR package `brother-dcpt230-open` is prepared but not published yet, because
+AUR registration was temporarily closed when this release was made. Build the
+same package from the repository in the meantime:
+
+```bash
+git clone https://github.com/vituxdxd/brother-dcpt230.git
+cd brother-dcpt230/packaging
+makepkg -si
+sudo dcpt230-setup
+```
+
+A prebuilt x86_64 package is attached to the [v1.0.1 release](https://github.com/vituxdxd/brother-dcpt230/releases/tag/v1.0.1).
+
+### From the source tree
+
 ```bash
 git clone https://github.com/vituxdxd/brother-dcpt230.git
 cd brother-dcpt230/driver
