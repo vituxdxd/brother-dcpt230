@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# dcpt230-setup — create or update the CUPS queue for the Brother DCP-T230.
+#
+# Run with sudo. Pass a device URI as an argument if auto-detection fails.
+#
+set -euo pipefail
+
+[ "$(id -u)" -eq 0 ] || { echo "run with sudo: sudo $0" >&2; exit 1; }
+QUEUE="${T230_QUEUE:-DCP-T230}"
+PPD=/usr/share/ppd/Brother/brother-t230.ppd
+
+[ -f "$PPD" ] || { echo "PPD not found: $PPD" >&2; exit 1; }
+
+URI="${1:-}"
+if [ -z "$URI" ]; then
+    URI="$(lpstat -v 2>/dev/null | grep -i 'DCP-T230' | head -1 | sed 's/^.*: //' || true)"
+fi
+if [ -z "$URI" ]; then
+    URI="$(lpinfo -v 2>/dev/null | awk '/usb:\/\/Brother/ {print $2; exit}' || true)"
+fi
+if [ -z "$URI" ]; then
+    echo "could not detect the printer; pass the device URI as an argument" >&2
+    echo "example: sudo $0 'usb://Brother/DCP-T230?serial=XXXXXXXX'" >&2
+    exit 1
+fi
+
+if lpstat -p "$QUEUE" >/dev/null 2>&1; then
+    lpadmin -p "$QUEUE" -E -v "$URI" -P "$PPD"
+else
+    lpadmin -p "$QUEUE" -E -v "$URI" -P "$PPD" -o printer-is-shared=false
+fi
+
+systemctl restart cups 2>/dev/null || true
+sleep 1
+
+echo "Queue '$QUEUE' is ready:"
+lpstat -p "$QUEUE" -v
+echo
+echo "Test print:  lp -d $QUEUE -t test /usr/share/cups/data/testprint"

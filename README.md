@@ -35,7 +35,8 @@ sudo ./install.sh
 
 `install.sh` copies the filter, the encoder and the PPD, then creates the CUPS
 queue `DCP-T230`. It auto-detects the USB device URI. Pass it as an argument if
-detection fails.
+detection fails. The queue can be recreated at any time with `sudo
+dcpt230-setup`, and removed with `sudo ./uninstall.sh`.
 
 Print a test page:
 

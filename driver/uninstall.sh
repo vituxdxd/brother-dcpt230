@@ -17,6 +17,7 @@ rm -f /usr/lib/cups/filter/brother-t230
 rm -rf /usr/lib/brother-t230
 rm -rf /usr/share/brother-t230
 rm -f /usr/share/ppd/Brother/brother-t230.ppd
+rm -f /usr/bin/dcpt230-setup
 
 systemctl restart cups
 
