@@ -1,0 +1,189 @@
+*PPD-Adobe: "4.3"
+*FormatVersion: "4.3"
+*FileVersion: "1.0"
+*LanguageVersion: English
+*LanguageEncoding: ISOLatin1
+*PCFileName: "BRT230O.PPD"
+*Manufacturer: "Brother"
+*Product: "(DCP-T230)"
+*ModelName: "Brother DCP-T230 open driver"
+*ShortNickName: "DCP-T230 open"
+*NickName: "Brother DCP-T230 (open driver)"
+*PSVersion: "(3010.000) 0"
+*LanguageLevel: "3"
+*ColorDevice: True
+*DefaultColorSpace: RGB
+*FileSystem: False
+*Throughput: "1"
+*LandscapeOrientation: Plus90
+*TTRasterizer: Type42
+*cupsFilter: "application/vnd.cups-postscript 0 brother-t230"
+*cupsFilter: "application/vnd.cups-pdf 0 brother-t230"
+*cupsManualCopies: True
+*DefaultPageSize: A4
+*OpenUI *PageSize/Page Size: PickOne
+*OrderDependency: 10 AnySetup *PageSize
+*PageSize A4/A4: "<</PageSize[595 842]/ImagingBBox[9 9 586 833]>>setpagedevice"
+*PageSize 195x270mm/195x270mm: "<</PageSize[553 765]/ImagingBBox[9 9 544 756]>>setpagedevice"
+*PageSize A5/A5: "<</PageSize[420 595]/ImagingBBox[9 9 411 586]>>setpagedevice"
+*PageSize A6/A6: "<</PageSize[297 420]/ImagingBBox[9 9 288 411]>>setpagedevice"
+*PageSize B5/B5: "<</PageSize[516 729]/ImagingBBox[9 9 507 720]>>setpagedevice"
+*PageSize BrA4_B/BrA4_B: "<</PageSize[595 842]/ImagingBBox[0 0 595 842]>>setpagedevice"
+*PageSize BrA6_B/BrA6_B: "<</PageSize[297 420]/ImagingBBox[0 0 297 420]>>setpagedevice"
+*PageSize BrIndexC5x8_B/BrIndexC5x8_B: "<</PageSize[360 576]/ImagingBBox[0 0 360 576]>>setpagedevice"
+*PageSize BrIndexC5x8_S/BrIndexC5x8_S: "<</PageSize[360 576]/ImagingBBox[9 9 351 567]>>setpagedevice"
+*PageSize BrLetter_B/BrLetter_B: "<</PageSize[612 792]/ImagingBBox[0 0 612 792]>>setpagedevice"
+*PageSize BrPhoto2L_B/BrPhoto2L_B: "<</PageSize[359 505]/ImagingBBox[0 0 359 505]>>setpagedevice"
+*PageSize BrPhoto2L_S/BrPhoto2L_S: "<</PageSize[359 505]/ImagingBBox[9 9 350 496]>>setpagedevice"
+*PageSize BrPhotoL_B/BrPhotoL_B: "<</PageSize[252 360]/ImagingBBox[0 0 252 360]>>setpagedevice"
+*PageSize BrPhotoL_S/BrPhotoL_S: "<</PageSize[252 360]/ImagingBBox[9 9 243 351]>>setpagedevice"
+*PageSize BrPostC4x6_B/BrPostC4x6_B: "<</PageSize[288 432]/ImagingBBox[0 0 288 432]>>setpagedevice"
+*PageSize BrPostC4x6_S/BrPostC4x6_S: "<</PageSize[288 432]/ImagingBBox[9 9 279 423]>>setpagedevice"
+*PageSize Env10/Env10: "<</PageSize[297 684]/ImagingBBox[9 34 288 650]>>setpagedevice"
+*PageSize EnvC5/EnvC5: "<</PageSize[459 649]/ImagingBBox[9 34 450 615]>>setpagedevice"
+*PageSize EnvDL/EnvDL: "<</PageSize[312 624]/ImagingBBox[9 34 303 590]>>setpagedevice"
+*PageSize EnvMonarch/EnvMonarch: "<</PageSize[279 540]/ImagingBBox[9 34 270 506]>>setpagedevice"
+*PageSize Executive/Executive: "<</PageSize[522 756]/ImagingBBox[9 9 513 747]>>setpagedevice"
+*PageSize FanFoldGermanLegal/FanFoldGermanLegal: "<</PageSize[612 936]/ImagingBBox[9 9 603 927]>>setpagedevice"
+*PageSize IndianLegal/IndianLegal: "<</PageSize[609 978]/ImagingBBox[9 9 600 969]>>setpagedevice"
+*PageSize JISB6/JISB6: "<</PageSize[363 516]/ImagingBBox[9 9 354 507]>>setpagedevice"
+*PageSize Legal/Legal: "<</PageSize[612 1008]/ImagingBBox[9 9 603 999]>>setpagedevice"
+*PageSize Letter/Letter: "<</PageSize[612 792]/ImagingBBox[9 9 603 783]>>setpagedevice"
+*PageSize MexicanLegal/MexicanLegal: "<</PageSize[612 963]/ImagingBBox[9 9 603 954]>>setpagedevice"
+*CloseUI: *PageSize
+*OpenUI *PageRegion/Page Region: PickOne
+*OrderDependency: 10 AnySetup *PageRegion
+*PageRegion A4/A4: "<</PageSize[595 842]/ImagingBBox[9 9 586 833]>>setpagedevice"
+*PageRegion 195x270mm/195x270mm: "<</PageSize[553 765]/ImagingBBox[9 9 544 756]>>setpagedevice"
+*PageRegion A5/A5: "<</PageSize[420 595]/ImagingBBox[9 9 411 586]>>setpagedevice"
+*PageRegion A6/A6: "<</PageSize[297 420]/ImagingBBox[9 9 288 411]>>setpagedevice"
+*PageRegion B5/B5: "<</PageSize[516 729]/ImagingBBox[9 9 507 720]>>setpagedevice"
+*PageRegion BrA4_B/BrA4_B: "<</PageSize[595 842]/ImagingBBox[0 0 595 842]>>setpagedevice"
+*PageRegion BrA6_B/BrA6_B: "<</PageSize[297 420]/ImagingBBox[0 0 297 420]>>setpagedevice"
+*PageRegion BrIndexC5x8_B/BrIndexC5x8_B: "<</PageSize[360 576]/ImagingBBox[0 0 360 576]>>setpagedevice"
+*PageRegion BrIndexC5x8_S/BrIndexC5x8_S: "<</PageSize[360 576]/ImagingBBox[9 9 351 567]>>setpagedevice"
+*PageRegion BrLetter_B/BrLetter_B: "<</PageSize[612 792]/ImagingBBox[0 0 612 792]>>setpagedevice"
+*PageRegion BrPhoto2L_B/BrPhoto2L_B: "<</PageSize[359 505]/ImagingBBox[0 0 359 505]>>setpagedevice"
+*PageRegion BrPhoto2L_S/BrPhoto2L_S: "<</PageSize[359 505]/ImagingBBox[9 9 350 496]>>setpagedevice"
+*PageRegion BrPhotoL_B/BrPhotoL_B: "<</PageSize[252 360]/ImagingBBox[0 0 252 360]>>setpagedevice"
+*PageRegion BrPhotoL_S/BrPhotoL_S: "<</PageSize[252 360]/ImagingBBox[9 9 243 351]>>setpagedevice"
+*PageRegion BrPostC4x6_B/BrPostC4x6_B: "<</PageSize[288 432]/ImagingBBox[0 0 288 432]>>setpagedevice"
+*PageRegion BrPostC4x6_S/BrPostC4x6_S: "<</PageSize[288 432]/ImagingBBox[9 9 279 423]>>setpagedevice"
+*PageRegion Env10/Env10: "<</PageSize[297 684]/ImagingBBox[9 34 288 650]>>setpagedevice"
+*PageRegion EnvC5/EnvC5: "<</PageSize[459 649]/ImagingBBox[9 34 450 615]>>setpagedevice"
+*PageRegion EnvDL/EnvDL: "<</PageSize[312 624]/ImagingBBox[9 34 303 590]>>setpagedevice"
+*PageRegion EnvMonarch/EnvMonarch: "<</PageSize[279 540]/ImagingBBox[9 34 270 506]>>setpagedevice"
+*PageRegion Executive/Executive: "<</PageSize[522 756]/ImagingBBox[9 9 513 747]>>setpagedevice"
+*PageRegion FanFoldGermanLegal/FanFoldGermanLegal: "<</PageSize[612 936]/ImagingBBox[9 9 603 927]>>setpagedevice"
+*PageRegion IndianLegal/IndianLegal: "<</PageSize[609 978]/ImagingBBox[9 9 600 969]>>setpagedevice"
+*PageRegion JISB6/JISB6: "<</PageSize[363 516]/ImagingBBox[9 9 354 507]>>setpagedevice"
+*PageRegion Legal/Legal: "<</PageSize[612 1008]/ImagingBBox[9 9 603 999]>>setpagedevice"
+*PageRegion Letter/Letter: "<</PageSize[612 792]/ImagingBBox[9 9 603 783]>>setpagedevice"
+*PageRegion MexicanLegal/MexicanLegal: "<</PageSize[612 963]/ImagingBBox[9 9 603 954]>>setpagedevice"
+*CloseUI: *PageRegion
+
+*OpenUI *BRResolution/Print Quality: PickOne
+*OrderDependency: 10 AnySetup *BRResolution
+*DefaultBRResolution: Normal
+*BRResolution Draft/Draft: " "
+*BRResolution Normal/Normal: " "
+*BRResolution Fine/Fine: " "
+*CloseUI: *BRResolution
+
+*OpenUI *BRMonoColor/Color Mode: PickOne
+*OrderDependency: 10 AnySetup *BRMonoColor
+*DefaultBRMonoColor: Auto
+*BRMonoColor Auto/Auto: " "
+*BRMonoColor FullColor/Full Color: " "
+*BRMonoColor Mono/Mono: " "
+*CloseUI: *BRMonoColor
+
+*OpenUI *BRMediaType/Media Type: PickOne
+*OrderDependency: 10 AnySetup *BRMediaType
+*DefaultBRMediaType: Plain
+*BRMediaType Plain/Plain Paper: " "
+*BRMediaType Thick/Thick Paper: " "
+*BRMediaType Thicker/Thicker Paper: " "
+*BRMediaType BOND/Bond Paper: " "
+*BRMediaType Recycled/Recycled Paper: " "
+*BRMediaType Env/Envelopes: " "
+*BRMediaType EnvThin/Envelope (thin): " "
+*BRMediaType EnvThick/Envelope (thick): " "
+*BRMediaType Label/Label: " "
+*BRMediaType PostCard/Postcard: " "
+*BRMediaType Inkjet/Inkjet Paper: " "
+*BRMediaType Glossy/Glossy Paper: " "
+*CloseUI: *BRMediaType
+
+*OpenUI *BRInputSlot/Paper Source: PickOne
+*OrderDependency: 10 AnySetup *BRInputSlot
+*DefaultBRInputSlot: AutoSelect
+*BRInputSlot AutoSelect/Auto Select: " "
+*BRInputSlot Tray1/Tray 1: " "
+*BRInputSlot Manual/Manual Feed: " "
+*CloseUI: *BRInputSlot
+
+*OpenUI *BRDuplex/Manual Duplex: PickOne
+*OrderDependency: 10 AnySetup *BRDuplex
+*DefaultBRDuplex: None
+*BRDuplex None/Off: " "
+*BRDuplex DuplexTumble/Short-edge binding: " "
+*BRDuplex DuplexNoTumble/Long-edge binding: " "
+*CloseUI: *BRDuplex
+*DefaultPageRegion: A4
+*DefaultPaperDimension: A4
+*DefaultImageableArea: A4
+*PaperDimension A4: "595 842"
+*ImageableArea A4: "9 9 586 833"
+*PaperDimension 195x270mm: "553 765"
+*ImageableArea 195x270mm: "9 9 544 756"
+*PaperDimension A5: "420 595"
+*ImageableArea A5: "9 9 411 586"
+*PaperDimension A6: "297 420"
+*ImageableArea A6: "9 9 288 411"
+*PaperDimension B5: "516 729"
+*ImageableArea B5: "9 9 507 720"
+*PaperDimension BrA4_B: "595 842"
+*ImageableArea BrA4_B: "0 0 595 842"
+*PaperDimension BrA6_B: "297 420"
+*ImageableArea BrA6_B: "0 0 297 420"
+*PaperDimension BrIndexC5x8_B: "360 576"
+*ImageableArea BrIndexC5x8_B: "0 0 360 576"
+*PaperDimension BrIndexC5x8_S: "360 576"
+*ImageableArea BrIndexC5x8_S: "9 9 351 567"
+*PaperDimension BrLetter_B: "612 792"
+*ImageableArea BrLetter_B: "0 0 612 792"
+*PaperDimension BrPhoto2L_B: "359 505"
+*ImageableArea BrPhoto2L_B: "0 0 359 505"
+*PaperDimension BrPhoto2L_S: "359 505"
+*ImageableArea BrPhoto2L_S: "9 9 350 496"
+*PaperDimension BrPhotoL_B: "252 360"
+*ImageableArea BrPhotoL_B: "0 0 252 360"
+*PaperDimension BrPhotoL_S: "252 360"
+*ImageableArea BrPhotoL_S: "9 9 243 351"
+*PaperDimension BrPostC4x6_B: "288 432"
+*ImageableArea BrPostC4x6_B: "0 0 288 432"
+*PaperDimension BrPostC4x6_S: "288 432"
+*ImageableArea BrPostC4x6_S: "9 9 279 423"
+*PaperDimension Env10: "297 684"
+*ImageableArea Env10: "9 34 288 650"
+*PaperDimension EnvC5: "459 649"
+*ImageableArea EnvC5: "9 34 450 615"
+*PaperDimension EnvDL: "312 624"
+*ImageableArea EnvDL: "9 34 303 590"
+*PaperDimension EnvMonarch: "279 540"
+*ImageableArea EnvMonarch: "9 34 270 506"
+*PaperDimension Executive: "522 756"
+*ImageableArea Executive: "9 9 513 747"
+*PaperDimension FanFoldGermanLegal: "612 936"
+*ImageableArea FanFoldGermanLegal: "9 9 603 927"
+*PaperDimension IndianLegal: "609 978"
+*ImageableArea IndianLegal: "9 9 600 969"
+*PaperDimension JISB6: "363 516"
+*ImageableArea JISB6: "9 9 354 507"
+*PaperDimension Legal: "612 1008"
+*ImageableArea Legal: "9 9 603 999"
+*PaperDimension Letter: "612 792"
+*ImageableArea Letter: "9 9 603 783"
+*PaperDimension MexicanLegal: "612 963"
+*ImageableArea MexicanLegal: "9 9 603 954"

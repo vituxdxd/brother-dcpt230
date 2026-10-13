@@ -1,0 +1,37 @@
+# Maintainer: <your name> <you@example.com>
+#
+# Template. Before submitting to the AUR, replace the url and the source URL
+# with the published repository, then run `makepkg --printsrcinfo > .SRCINFO`.
+
+pkgname=brother-dcpt230-open
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Open CUPS driver for the Brother DCP-T230 inkjet printer (600 dpi)"
+arch=('any')
+url="https://github.com/vituxdxd/brother-dcpt230"
+license=('GPL-2.0-or-later')
+depends=('cups' 'cups-filters' 'ghostscript')
+makedepends=('gcc' 'python')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+    cd "brother-dcpt230-$pkgver"
+    make -C driver
+}
+
+package() {
+    cd "brother-dcpt230-$pkgver"
+    install -Dm755 driver/t230_encode \
+        "$pkgdir/usr/lib/brother-t230/t230_encode"
+    install -Dm755 driver/brother-t230 \
+        "$pkgdir/usr/lib/cups/filter/brother-t230"
+    install -Dm644 driver/papers.tsv \
+        "$pkgdir/usr/share/brother-t230/papers.tsv"
+    install -Dm644 driver/ppd/brother-t230.ppd \
+        "$pkgdir/usr/share/ppd/Brother/brother-t230.ppd"
+}
+
+# After installing, create the queue with:
+#   sudo lpadmin -p DCP-T230 -E -v 'usb://Brother/DCP-T230?serial=...' \
+#        -P /usr/share/ppd/Brother/brother-t230.ppd

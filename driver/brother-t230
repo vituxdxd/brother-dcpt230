@@ -1,0 +1,199 @@
+#!/bin/bash
+#
+# brother-t230 — CUPS filter for the Brother DCP-T230 (open driver).
+#
+# CUPS invokes filters as:  brother-t230 job-id user title copies options [file]
+#
+# Pipeline:  PostScript/PDF -> Ghostscript (PPM) -> t230_encode (PJL + raster)
+#
+# The wire format is described in docs/PROTOCOL.md.
+#
+# Environment overrides:
+#   T230_DRAFT_DPI / T230_NORMAL_DPI / T230_FINE_DPI   (default 300 / 600 / 600)
+#   T230_ENCODE   path to the encoder binary
+#   T230_DEBUG=1  keep temporary files under /tmp
+#
+set -euo pipefail
+
+JOB="${1:-0}"; OWNER="${2:-}"; TITLE="${3:-}"; COPIES="${4:-1}"
+OPTIONS="${5:-}"; INFILE="${6:-}"
+
+SELF="$(readlink -f "$0")"
+DIR="$(dirname "$SELF")"
+
+PAPERS=""
+for cand in "$DIR/papers.tsv" "$DIR/../share/brother-t230/papers.tsv" \
+            "/usr/share/brother-t230/papers.tsv"; do
+    if [ -f "$cand" ]; then PAPERS="$cand"; break; fi
+done
+if [ -z "$PAPERS" ]; then
+    echo "brother-t230: papers.tsv not found" >&2
+    exit 1
+fi
+
+ENC="${T230_ENCODE:-}"
+if [ -z "$ENC" ]; then
+    for cand in "$DIR/t230_encode" "/usr/lib/brother-t230/t230_encode"; do
+        if [ -x "$cand" ]; then ENC="$cand"; break; fi
+    done
+fi
+if [ -z "$ENC" ] || [ ! -x "$ENC" ]; then
+    echo "brother-t230: t230_encode not found" >&2
+    exit 1
+fi
+
+GS="$(command -v gs || true)"
+if [ -z "$GS" ]; then
+    echo "brother-t230: ghostscript (gs) not found" >&2
+    exit 1
+fi
+
+# ------------------------------------------------------------------ options --
+declare -A OPT
+for kv in $OPTIONS; do
+    case "$kv" in
+        *=*) OPT["${kv%%=*}"]="${kv#*=}" ;;
+    esac
+done
+PAGESIZE="${OPT[PageSize]:-A4}"
+QUALITY="${OPT[BRResolution]:-Normal}"
+COLOR="${OPT[BRMonoColor]:-Auto}"
+MEDIA="${OPT[BRMediaType]:-Plain}"
+SLOT="${OPT[BRInputSlot]:-AutoSelect}"
+DUPLEX="${OPT[BRDuplex]:-None}"
+
+# ------------------------------------------------------------------- table --
+line="$(awk -F'\t' -v p="$PAGESIZE" 'NR>1 && $1==p {print; exit}' "$PAPERS")"
+if [ -z "$line" ]; then
+    echo "brother-t230: unsupported PageSize '$PAGESIZE'" >&2
+    exit 1
+fi
+IFS=$'\t' read -r _PPD RC PTW PTH PXW PXH PJL BORDER TOP BOT LEFT RIGHT \
+                 IML IMT IMR IMB PID <<<"$line"
+
+# --------------------------------------------------------------- resolution --
+# 600 dpi is the printer's default quality (and what the vendor's Windows
+# driver uses). 300 dpi is kept for draft mode.
+case "$QUALITY" in
+    Draft)  DPI="${T230_DRAFT_DPI:-300}" ;;
+    Fine)   DPI="${T230_FINE_DPI:-600}" ;;
+    *)      DPI="${T230_NORMAL_DPI:-600}" ;;
+esac
+case "$DPI" in
+    150|300|600|1200) : ;;
+    *) echo "brother-t230: invalid DPI: $DPI" >&2; exit 1 ;;
+esac
+RASW=$(( PXW * DPI / 300 ))
+RASH=$(( PXH * DPI / 300 ))
+
+# ------------------------------------------------------------ option mapping --
+case "$QUALITY" in
+    Draft) QPJL=DRAFT;   QLOG=1 ;;
+    Fine)  QPJL=HIGH;    QLOG=3 ;;
+    *)     QPJL=NORMAL;  QLOG=2 ;;
+esac
+case "$COLOR" in
+    Mono) RPJL=GRAYSCALE; CLOG=1; MONO=--mono ;;
+    *)    RPJL=COLOR;     CLOG=2; MONO= ;;
+esac
+case "$MEDIA" in
+    Thicker)    MPJL=THICK2;    MLOG=0x00000002 ;;
+    BOND)       MPJL=BOND;      MLOG=0x00000005 ;;
+    Env)        MPJL=ENVELOPES; MLOG=0x00000006 ;;
+    EnvThick)   MPJL=ENVTHICK;  MLOG=0x00000007 ;;
+    EnvThin)    MPJL=ENVTHIN;   MLOG=0x00000008 ;;
+    Recycled)   MPJL=RECYCLED;  MLOG=0x00000009 ;;
+    PostCard)   MPJL=POSTCARD;  MLOG=0x0000000A ;;
+    Label)      MPJL=LABEL;     MLOG=0x0000000B ;;
+    Inkjet)     MPJL=INKJET;    MLOG=0x00000105 ;;
+    Glossy)     MPJL=GLOSSY;    MLOG=0x00000107 ;;
+    Thick)      MPJL=THICK;     MLOG=0x00000001 ;;
+    *)          MPJL=REGULAR;   MLOG=0x00000001 ;;
+esac
+case "$SLOT" in
+    Manual)     SLOG=4; MANUAL=ON;  TRAY="" ;;
+    Tray1)      SLOG=1; MANUAL=OFF; TRAY=TRAY1 ;;
+    Tray2)      SLOG=2; MANUAL=OFF; TRAY=TRAY2 ;;
+    MPTray)     SLOG=3; MANUAL=OFF; TRAY=MPTRAY ;;
+    *)          SLOG=7; MANUAL=OFF; TRAY=AUTO ;;
+esac
+case "$DUPLEX" in
+    DuplexTumble)   DPJL=ON;  DLOG=258 ;;
+    DuplexNoTumble) DPJL=ON;  DLOG=256 ;;
+    *)              DPJL=OFF; DLOG=0 ;;
+esac
+
+# ---------------------------------------------------------------------- PJL --
+TMPD="$(mktemp -d /tmp/brother-t230.XXXXXX)"
+trap '[ -n "${T230_DEBUG:-}" ] || rm -rf "$TMPD"' EXIT
+PJLF="$TMPD/pjl"
+
+{
+    printf '\033%%-12345X@PJL \n'
+    printf '@PJL SET HOLD=OFF\n'
+    if [ -n "$OWNER" ]; then
+        printf '@PJL SET USERNAME="%s"\n' "$OWNER"
+    fi
+    if [ -n "$TITLE" ]; then
+        printf '@PJL SET JOBNAME="%s"\n' "$TITLE"
+    fi
+    if [ -n "$OWNER" ]; then
+        printf '@PJL SET LOGINUSER="%s"\n' "$OWNER"
+    fi
+    if [ -n "$TITLE" ]; then
+        printf '@PJL JOB NAME="%s"\n' "$TITLE"
+    fi
+    printf '@PJL SET STRINGCODESET=UTF8\n'
+    printf '@PJL SET PAPER=%s\n' "$PJL"
+    printf '@PJL SET BORDERLESS=%s\n' "$BORDER"
+    printf '@PJL SET JTTOPMARGIN=%s\n' "$TOP"
+    printf '@PJL SET JTBOTMARGIN=%s\n' "$BOT"
+    printf '@PJL SET JTLEFTMARGIN=%s\n' "$LEFT"
+    printf '@PJL SET JTRIGHTMARGIN=%s\n' "$RIGHT"
+    printf '@PJL SET RENDERMODE=%s\n' "$RPJL"
+    printf '@PJL SET PRINTQUALITY=%s\n' "$QPJL"
+    printf '@PJL SET DUPLEX=%s\n' "$DPJL"
+    printf '@PJL SET MEDIATYPE=%s\n' "$MPJL"
+    printf '@PJL SET MANUALFEED=%s\n' "$MANUAL"
+    if [ -n "$TRAY" ]; then
+        printf '@PJL SET SOURCETRAY=%s\n' "$TRAY"
+    fi
+    JOBSLOG=$(printf 'I0004036%s%08X%04X%04X%04X%04X%04X' \
+        "11" "$MLOG" "$QLOG" "$PID" "$CLOG" "$DLOG" "$SLOG")
+    printf '@PJL JOBSETTINGLOG DRIVER=%s\n' "$JOBSLOG"
+    printf '@PJL SET FIDELITY=TRUE\n'
+    printf '@PJL ENTER LANGUAGE=PWGRASTER\n'
+} > "$PJLF"
+
+# --------------------------------------------------------------------- input --
+PS=0
+if [ -n "$INFILE" ] && [ -f "$INFILE" ]; then
+    INPUT="$INFILE"
+else
+    INPUT="$TMPD/in"
+    cat > "$INPUT"
+fi
+if head -c 5 "$INPUT" | grep -q '^%!PS'; then
+    PS=1
+fi
+
+# ----------------------------------------------------------------------- run --
+# Copies are duplicated by CUPS (pdftopdf) because the PPD sets
+# cupsManualCopies, so this filter processes the stream exactly once.
+if [ "$PS" = 1 ]; then
+    {
+        printf '<</ImagingBBox [%s %s %s %s] /PageOffset [-%s %s]>> setpagedevice\n' \
+               "$IML" "$IMT" "$IMR" "$IMB" "$IML" "$IMT"
+        cat "$INPUT"
+    } | "$GS" -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=ppmraw \
+               -r"$DPI" -g"${RASW}x${RASH}" -sOutputFile=- - \
+    | "$ENC" --width "$RASW" --height "$RASH" --pt "${PTW}x${PTH}" \
+             --dpi "$DPI" $MONO --pjl "$PJLF" --job-start --job-end --eoj "$TITLE"
+else
+    cat "$INPUT" | "$GS" -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=ppmraw \
+               -r"$DPI" -g"${RASW}x${RASH}" -sOutputFile=- - \
+    | "$ENC" --width "$RASW" --height "$RASH" --pt "${PTW}x${PTH}" \
+             --dpi "$DPI" $MONO --pjl "$PJLF" --job-start --job-end --eoj "$TITLE"
+fi
+
+exit 0
